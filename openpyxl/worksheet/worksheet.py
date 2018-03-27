@@ -260,7 +260,7 @@ class Worksheet(_WorkbookChild):
         else:
             self.print_title_rows = '1:%d' % n
 
-    def cell(self, coordinate=None, row=None, column=None, value=None):
+    def cell(self, coordinate=None, row=None, column=None, value=None, create_if_missing=True):
         """Returns a cell object based on the given coordinates.
 
         Usage: cell(row=15, column=1, value=5)
@@ -298,19 +298,21 @@ class Worksheet(_WorkbookChild):
         if row < 1 or column < 1:
             raise ValueError("Row or column values must be at least 1")
 
-        cell = self._get_cell(row, column)
+        cell = self._get_cell(row, column, create_if_missing)
         if value is not None:
             cell.value = value
 
         return cell
 
-    def _get_cell(self, row, column):
+    def _get_cell(self, row, column, create_if_missing=True):
         """
         Internal method for getting a cell from a worksheet.
         Will create a new cell if one doesn't already exist.
         """
         row_ref = self._row_by_index(row)
         if not column in row_ref:
+            if not create_if_missing:
+                return None
             cell = Cell(self, row=row, col_idx=column)
             self._add_cell(cell)
         return row_ref[column]
