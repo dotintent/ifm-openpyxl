@@ -139,7 +139,9 @@ class WorkSheetParser(object):
         value = element.find(self.VALUE_TAG)
         if value is not None:
             value = value.text
-        formula = element.find(self.FORMULA_TAG)
+        formula = None
+        if not self.data_only:
+            formula = element.find(self.FORMULA_TAG)
         data_type = element.get('t', 'n')
         coordinate = element.get('r')
         self._col_count += 1
@@ -203,7 +205,7 @@ class WorkSheetParser(object):
 
 
         style_array = None
-        if style_id is not None:
+        if not self.data_only and style_id is not None:
             style_id = int(style_id)
             style_array = self.styles[style_id]
 
