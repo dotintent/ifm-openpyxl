@@ -139,14 +139,16 @@ class WorkSheetParser(object):
         value = element.find(self.VALUE_TAG)
         if value is not None:
             value = value.text
-        formula = element.find(self.FORMULA_TAG)
+        formula = None
+        if not self.data_only:
+            formula = element.find(self.FORMULA_TAG)
         data_type = element.get('t', 'n')
         coordinate = element.get('r')
         self._col_count += 1
         style_id = element.get('s')
 
         # assign formula to cell value unless only the data is desired
-        if formula is not None and not self.data_only:
+        if formula is not None:
             data_type = 'f'
             if formula.text:
                 value = "=" + formula.text
@@ -213,7 +215,7 @@ class WorkSheetParser(object):
             row, column = self._row_count, self._col_count
 
         cell = Cell(self.ws, row=row, col_idx=column, style_array=style_array)
-        self.ws._cells[(row, column)] = cell
+        self.ws._add_cell(cell)
 
         if value is not None:
             if data_type == 'n':
