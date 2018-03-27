@@ -386,7 +386,7 @@ class Worksheet(_WorkbookChild):
         if self._cached_min_row is None:
             self._cached_min_row = 1
             if self._cells:
-                rows = set(c[0] for c in self._cells)
+                rows = self._cells.keys()
                 self._cached_min_row = min(rows)
         return self._cached_min_row
 
@@ -399,7 +399,7 @@ class Worksheet(_WorkbookChild):
         if self._cached_max_row is None:
             self._cached_max_row = 1
             if self._cells:
-                rows = set(c[0] for c in self._cells)
+                rows = self._cells.keys()
                 self._cached_max_row = max(rows)
         return self._cached_max_row
 
@@ -408,8 +408,10 @@ class Worksheet(_WorkbookChild):
         if self._cached_min_col is None:
             self._cached_min_col = 1
             if self._cells:
-                cols = set(c[1] for c in self._cells)
-                self._cached_min_col = min(cols)
+                for row in self._cells:
+                    cols_keys = row.keys()
+                    if cols_keys:
+                        self._cached_min_col = min(self._cached_min_col, min(cols_keys))
         return self._cached_min_col
 
     @property
@@ -421,8 +423,10 @@ class Worksheet(_WorkbookChild):
         if self._cached_max_col is None:
             self._cached_max_col = 1
             if self._cells:
-                cols = set(c[1] for c in self._cells)
-                self._cached_max_col = max(cols)
+                for row in self._cells:
+                    cols_keys = row.keys()
+                    if cols_keys:
+                        self._cached_max_col = max(self._cached_max_col, max(cols_keys))
         return self._cached_max_col
 
     def calculate_dimension(self):
