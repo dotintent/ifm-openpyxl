@@ -13,8 +13,9 @@ def get_rows_to_write(worksheet):
     """Return all rows, and any cells that they contain"""
     # order cells by row
     rows = {}
-    for (row, col), cell in worksheet._cells.items():
-        rows.setdefault(row, []).append((col, cell))
+    for rowid, cols in worksheet._cells.items():
+        for colid, cell in cols.items():
+            rows.setdefault(rowid, []).append((colid, cell))
 
     # add empty rows if styling has been applied
     for row_idx in worksheet.row_dimensions:
