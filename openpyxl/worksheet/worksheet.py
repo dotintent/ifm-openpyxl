@@ -428,11 +428,6 @@ class Worksheet(_WorkbookChild):
     def calculate_dimension(self):
         """Return the minimum bounding range for all cells containing data."""
         if self._cells:
-            rows = set()
-            cols = set()
-            for row, col in self._cells:
-                rows.add(row)
-                cols.add(col)
             max_row = self.max_row
             max_col = self.max_column
             min_col = self.min_column
