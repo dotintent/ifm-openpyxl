@@ -431,10 +431,10 @@ class Worksheet(_WorkbookChild):
             for row, col in self._cells:
                 rows.add(row)
                 cols.add(col)
-            max_row = max(rows)
-            max_col = max(cols)
-            min_col = min(cols)
-            min_row = min(rows)
+            max_row = self.max_row
+            max_col = self.max_column
+            min_col = self.min_column
+            min_row = self.min_row
         else:
             return "A1:A1"
 
