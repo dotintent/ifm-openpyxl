@@ -118,6 +118,7 @@ class Worksheet(_WorkbookChild):
         self._cached_max_col = None
         self._cached_min_row = None
         self._cached_max_row = None
+        self._cells = {}
         self._setup()
 
     def _setup(self):
@@ -125,7 +126,6 @@ class Worksheet(_WorkbookChild):
         self.column_dimensions = DimensionHolder(worksheet=self,
                                                  default_factory=self._add_column)
         self.page_breaks = PageBreak()
-        self._cells = {}
         self._charts = []
         self._images = []
         self._rels = RelationshipList()
@@ -309,11 +309,16 @@ class Worksheet(_WorkbookChild):
         Internal method for getting a cell from a worksheet.
         Will create a new cell if one doesn't already exist.
         """
-        coordinate = (row, column)
-        if not coordinate in self._cells:
+        row_ref = self._row_by_index(row)
+        if not column in row_ref:
             cell = Cell(self, row=row, col_idx=column)
             self._add_cell(cell)
-        return self._cells[coordinate]
+        return row_ref[column]
+
+    def _row_by_index(self, index):
+        if not index in self._cells:
+            self._cells[index] = {}
+        return self._cells[index]
 
     def _add_cell(self, cell):
         """
@@ -322,7 +327,7 @@ class Worksheet(_WorkbookChild):
         column = cell.col_idx
         row = cell.row
         self._current_row = max(row, self._current_row)
-        self._cells[(row, column)] = cell
+        self._row_by_index(row)[column] = cell
         if self._cached_max_col is None or self._cached_max_col < column:
             self._cached_max_col = column
         if self._cached_min_col is None or self._cached_min_col > column:
