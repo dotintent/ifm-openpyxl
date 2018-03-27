@@ -771,14 +771,14 @@ class Worksheet(_WorkbookChild):
                     cell.row = row_idx
                 else:
                     cell = Cell(self, row=row_idx, col_idx=col_idx, value=content)
-                self._cells[(row_idx, col_idx)] = cell
+                self._row_by_index(row_idx)[col_idx] = cell
 
         elif isinstance(iterable, dict):
             for col_idx, content in iterable.items():
                 if isinstance(col_idx, basestring):
                     col_idx = column_index_from_string(col_idx)
                 cell = Cell(self, row=row_idx, col_idx=col_idx, value=content)
-                self._cells[(row_idx, col_idx)] = cell
+                self._row_by_index(row_idx)[col_idx] = cell
 
         else:
             self._invalid_row(iterable)
