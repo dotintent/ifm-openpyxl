@@ -323,6 +323,10 @@ class Worksheet(_WorkbookChild):
         row = cell.row
         self._current_row = max(row, self._current_row)
         self._cells[(row, column)] = cell
+        if self._cached_max_col is None or self._cached_max_col < column:
+            self._cached_max_col = column
+        if self._cached_min_col is None or self._cached_min_col > column:
+            self._cached_min_col = column
 
     def __getitem__(self, key):
         """Convenience access by Excel style coordinates
