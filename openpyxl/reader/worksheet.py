@@ -148,7 +148,7 @@ class WorkSheetParser(object):
         style_id = element.get('s')
 
         # assign formula to cell value unless only the data is desired
-        if formula is not None and not self.data_only:
+        if formula is not None:
             data_type = 'f'
             if formula.text:
                 value = "=" + formula.text
@@ -205,7 +205,7 @@ class WorkSheetParser(object):
 
 
         style_array = None
-        if not self.data_only and style_id is not None:
+        if style_id is not None:
             style_id = int(style_id)
             style_array = self.styles[style_id]
 
